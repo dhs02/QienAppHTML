@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            * {
+	            margin: 0;
+	            padding: 0;
+	            box-sizing: border-box;
+            }
+            body {
+	            padding-top: 0px;
+	            font-family: "Titillium Web", sans-serif;
+	            background-color: #ececec;
+                font-size: 14px;
+            }
+            .container {
+	            margin: 0 auto;
+	            padding: 20px;
+                border: 1px solid black;
+            }
+            .col1, .col2, .col3 {
+                display: inline-block;
+                vertical-align: top;
+                width: 30%;
+            }
+            label {
+                 display: inline-block;
+                 width: 35%;
+            }
+            ul {
+                list-style-type: none;
+            }
+            h2 {
+                font-size: 16px;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div class="wrapper">
+
+            <div class="container">
+                <div class = "col1">
+                    <h2>Contactpersonen in database</h2>
+                    <br><div id="printInhoud"></div>
+                </div>
+                <div class = "col2">
+                    <h2>Opdrachtgevers in database</h2>
+                    <br><div id="printOpdrachtgevers"></div>
+                </div>
+                <div class = "col3">
+                    <h2>Medewerkers in database</h2>
+                    <br><div id="printMedewerkers"></div>
+                </div>
+            </div>
+
+            <div class="container">
+                <div class = col1>
+                    <h2>Contactpersoon toevoegen</h2>
+                    <br><form>
+
+                        <br><label for="voornaam">Voornaam:</label>
+                        <input type="text" id="voornaam">
+                    
+                        <br><label for="achternaam">Achternaam:</label>
+                        <input type="text" id="achternaam">
+
+                        <br><label for="email">E-mailadres:</label>
+                        <input type="text" id="email">
+
+                        <br><label for="adres">Adres:</label>
+                        <input type="text" id="adres">
+
+                        <br><label for="geboorteDatum">Geboortedatum:</label>
+                        <input type="text" id="geboorteDatum">
+
+                        <br><label for="telefoonNummer">Telefoonnummer:</label>
+                        <input type="text" id="telefoonNummer">
+
+                        <br><input type="button" id = "addCon" value="Voeg Contactpersoon toe"  onclick="addContactpersoonToDB()">
+
+                    </form>
+                </div>
+                <div class = col2>
+                    <h2>Opdrachtgever toevoegen</h2>
+                    <br><form>
+                        <br><label for="bedrijfsnaam">Bedrijfsnaam:</label>
+                        <input type="text" id="bedrijfsnaam">
+                    
+                        <br><label for="adresOG">Adres:</label>
+                        <input type="text" id="adresOG">
+
+                        <br><label for="emailOG">E-mailadres:</label>
+                        <input type="text" id="emailOG">
+
+                        <br><label for="telefoonnummerOG">Telefoonnummer:</label>
+                        <input type="text" id="telefoonnummerOG">
+
+                        <br><input type="button" id = "addOG" value="Voeg Opdrachtgever toe"  onclick="addOpdrachtgeverToDB()">
+                    </form>
+                </div>
+                <div class = col3>
+                    <h2>Medewerker toevoegen</h2>
+                    <br><form>
+                        <br><label for="voornaamMedewerker">Voornaam:</label>
+                        <input type="text" id="voornaamMedewerker">
+                    
+                        <br><label for="achternaamMedewerker">Achternaam:</label>
+                        <input type="text" id="achternaamMedewerker">
+
+                        <br><label for="emailMedewerker">E-mailadres:</label>
+                        <input type="text" id="emailMedewerker">
+
+                        <br><label for="adresMedewerker">Adres:</label>
+                        <input type="text" id="adresMedewerker">
+
+                        <br><label for="geboorteDatumMedewerker">Geboortedatum:</label>
+                        <input type="text" id="geboorteDatumMedewerker">
+
+                        <br><label for="telefoonNummerMedewerker">Telefoonnummer:</label>
+                        <input type="text" id="telefoonNummerMedewerker">
+
+                        <br><input type="button" id = "addMedewerker" value="Voeg Medewerker toe"  onclick="addMedewerkerToDB()">
+                    </form>
+                </div>
+            </div>
+
+            <div class="container">
+                <div class = "col1">
+                    <h2>Contactpersoon verwijderen</h2>
+                    <br><div id="verwijderDiv">
+                        <input type="text" id="userInput">
+                        <button id="del" onclick="verwijder()">Verwijder contactpersoon met deze ID</button>
+                    </div>
+                </div>
+                <div class = "col2">
+                    <h2>Opdrachtgever verwijderen</h2>
+                    <br><div id="verwijderDiv2">
+                        <input type="text" id="userInputDeleteOpdrachtgever">
+                        <button id="del" onclick="verwijderOpdrachtgever()">Verwijder opdrachtgever met deze ID</button>
+                    </div>
+                </div>
+                <div class = "col3">
+                    <h2>Medewerker verwijderen</h2>
+                    <br><div id="verwijderDiv">
+                        <input type="text" id="userInputDeleteMedewerker">
+                        <button id="del" onclick="verwijderMedewerker()">Verwijder medewerker met deze ID</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container">
+                <div class = "col1">
+                    <h2>Contactpersoon bekijken</h2>
+                    <br><input type="text" id="userInput2">
+                    <button id="checkGebruiker" onclick="loadObject()">Bekijk contactpersoon met deze ID</button>
+                    <div id="printObject"></div>
+                </div>
+                <div class = "col2">
+                    <h2>Opdrachtgever bekijken</h2>
+                    <br><input type="text" id="userInputBekijkOpdrachtgever">
+                    <button id="checkOpdrachtgever" onclick="laadOpdrachtgever()">Bekijk opdrachtgever met deze ID</button>
+                    <div id="printOG"></div>
+                </div>
+                <div class = "col3">
+                    <h2>Medewerker bekijken</h2>
+                    <br><input type="text" id="userInputBekijkMedewerker">
+                    <button id="checMedewerker" onclick="laadMedewerker()">Bekijk medewerker met deze ID</button>
+                    <div id="printMW"></div>
+                </div>
+            </div>
+
+            <div class="container">
+                <div class = col1>
+                    <h2>Contactpersoon wijzigen</h2>
+                    <br><form>
+                        <br><label for="voornaam">Voornaam:</label>
+                        <input type="text" id="voornaam2">
+                    
+                        <br><label for="achternaam">Achternaam:</label>
+                        <input type="text" id="achternaam2">
+
+                        <br><label for="email">E-mailadres:</label>
+                        <input type="text" id="email2">
+
+                        <br><label for="adres">Adres:</label>
+                        <input type="text" id="adres2">
+
+                        <br><label for="geboorteDatum">Geboortedatum:</label>
+                        <input type="text" id="geboorteDatum2">
+
+                        <br><label for="telefoonNummer">Telefoonnummer:</label>
+                        <input type="text" id="telefoonNummer2">
+                        
+                        <br><input type="text" id="userInput3">
+                        <button id="veranderGebruiker" onclick="changeObject()">Verander contactpersoon met deze ID</button>
+                    </form>
+                </div>
+                <div class = col2>
+                    <h2>Opdrachtgever wijzigen</h2>
+                    <br><form>
+                        <br><label for="bedrijfsnaam2">Bedrijfsnaam:</label>
+                        <input type="text" id="bedrijfsnaam2">
+                    
+                        <br><label for="adresOG2">Adres:</label>
+                        <input type="text" id="adresOG2">
+
+                        <br><label for="emailOG2">E-mailadres:</label>
+                        <input type="text" id="emailOG2">
+
+                        <br><label for="telefoonnummerOG2">Telefoonnummer:</label>
+                        <input type="text" id="telefoonnummerOG2">
+                        
+                        <br><input type="text" id="userInput4">
+                        <button id="veranderOpdrachtgever" onclick="changeOpdrachtgever()">Verander opdrachtgever met deze ID</button>
+                    </form>
+                </div>
+                <div class = col3>
+                    <h2>Medewerker wijzigen</h2>
+                    <br><form>
+                        <br><label for="voornaamMedewerker2">Voornaam:</label>
+                        <input type="text" id="voornaamMedewerker2">
+                    
+                        <br><label for="achternaamMedewerker2">Achternaam:</label>
+                        <input type="text" id="achternaamMedewerker2">
+
+                        <br><label for="emailMedewerker2">E-mailadres:</label>
+                        <input type="text" id="emailMedewerker2">
+
+                        <br><label for="adresMedewerker2">Adres:</label>
+                        <input type="text" id="adresMedewerker2">
+
+                        <br><label for="geboorteDatumMedewerker2">Geboortedatum:</label>
+                        <input type="text" id="geboorteDatumMedewerker2">
+
+                        <br><label for="telefoonNummerMedewerker2">Telefoonnummer:</label>
+                        <input type="text" id="telefoonNummerMedewerker2">
+                        
+                        <br><input type="text" id="userInputMedewerkerWijzigen">
+                        <button id="veranderMedewerker" onclick="changeMedewerker()">Verander medewerker met deze ID</button>
+                    </form>
+                </div>
+            </div>
+            <div class="container">
+                <div class = "col1">
+                    <h2>Contactpersoon aan medewerker toevoegen</h2>
+                    <br><label for="MedewerkerID">ID van medewerker</label>
+                    <input type="text" id="MedewerkerID">
+                
+                    <br><label for="ContactpersoonID">ID van contactpersoon</label>
+                    <input type="text" id="ContactpersoonID">
+
+                    <button id="voegContactpersoonToe" onclick="addCPToMW()">Voeg contactpersoon toe aan medewerker</button>
+                </div>
+                <div class = "col2">
+                    <h2>Opdrachtgever aan medewerker toevoegen</h2>
+                    <br><label for="MedewerkerID2">ID van medewerker</label>
+                    <input type="text" id="MedewerkerID2">
+                
+                    <br><label for="OpdrachtgeverID">ID van opdrachtgever</label>
+                    <input type="text" id="OpdrachtgeverID">
+
+                    <button id="voegOpdrachtgeverToe" onclick="addOGToMW()">Voeg opdrachtgever toe aan medewerker</button>
+                </div>
+                <div class = "col3">
+                </div>
+            </div>
+            <div class="container">
+                <div class = "col1">
+                </div>
+                <div class = "col2">
+                    <h2>Opdrachtgever aan contactpersoon toevoegen</h2>
+                    <br><label for="ContactpersoonID2">ID van contactpersoon</label>
+                    <input type="text" id="ContactpersoonID2">
+                
+                    <br><label for="OpdrachtgeverID2">ID van opdrachtgever</label>
+                    <input type="text" id="OpdrachtgeverID2">
+
+                    <button id="voegOpdrachtgeverToe2" onclick="addCPToOG()">Voeg opdrachtgever toe aan contactpersoon</button>
+                </div>
+                <div class = "col3">
+                </div>
+            </div>
+
+
+        </div>
+    
+        <script>
+
+            function addCPToMW() {
+                var input1 = document.getElementById('MedewerkerID').value;
+                var input2 = document.getElementById('ContactpersoonID').value;
+                var url = "http://localhost:8082/api/medewerkers/contactpersoon/" + input1 + "/" + input2;
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function(){
+                    loadObjects();
+                    laadOpdrachtgevers();
+                    laadMedewerkers();
+                }
+                xhr.open("GET", url, true);
+                xhr.send();
+            }
+
+            function addOGToMW() {
+                var input1 = document.getElementById('MedewerkerID2').value;
+                var input2 = document.getElementById('OpdrachtgeverID').value;
+                var url = "http://localhost:8082/api/medewerkers/opdrachtgever/" + input1 + "/" + input2;
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function(){
+                    loadObjects();
+                    laadOpdrachtgevers();
+                    laadMedewerkers();
+                }
+                xhr.open("GET", url, true);
+                xhr.send();
+            }
+
+            function addCPToOG() {
+                var input1 = document.getElementById('ContactpersoonID2').value;
+                var input2 = document.getElementById('OpdrachtgeverID2').value;
+                var url = "http://localhost:8082/api/contactpersonen/opdrachtgever/" + input1 + "/" + input2;
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function(){
+                    loadObjects();
+                    laadOpdrachtgevers();
+                    laadMedewerkers();
+                }
+                xhr.open("GET", url, true);
+                xhr.send();
+            }
+
+
+
+
+
+            function loadObjects() {
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function(){
+                    var inhoudDB = JSON.parse(this.responseText);
+                    var string1 = "<ul>";
+                    for (x=0; x<inhoudDB.length; x++) {
+                        string1 += "<li>"+ inhoudDB[x].id + " " + inhoudDB[x].voornaam + " " + inhoudDB[x].achternaam + " " + inhoudDB[x].adres + " " + inhoudDB[x].email + " " + inhoudDB[x].telefoonNummer + " " + inhoudDB[x].geboorteDatum + " "  + inhoudDB[x].opdrachtgever +  "</li>";
+                    }
+                    string1 += "</ul>";
+                    document.getElementById("printInhoud").innerHTML = string1;
+                }
+                xhr.open("GET","http://localhost:8082/api/contactpersonen/", true);
+                xhr.send();
+            }
+
+            function laadOpdrachtgevers() {
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function(){
+                    var inhoudDB = JSON.parse(this.responseText);
+                    var string1 = "<ul>";
+                    for (x=0; x<inhoudDB.length; x++) {
+                        string1 += "<li>"+ inhoudDB[x].id + " " + inhoudDB[x].bedrijfsnaam + " " + inhoudDB[x].adres + " " + inhoudDB[x].email + " " + inhoudDB[x].telefoonnummer + "</li>";
+                    }
+                    string1 += "</ul>";
+                    document.getElementById("printOpdrachtgevers").innerHTML = string1;
+                }
+                xhr.open("GET","http://localhost:8082/api/opdrachtgevers/", true);
+                xhr.send();
+            }
+
+            function laadMedewerkers() {
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function(){
+                    var inhoudDB = JSON.parse(this.responseText);
+                    var string1 = "<ul>";
+                    for (x=0; x<inhoudDB.length; x++) {
+                        string1 += "<li>"+ inhoudDB[x].id + " " + inhoudDB[x].voornaam + " " + inhoudDB[x].achternaam + " " + inhoudDB[x].adres + " " + inhoudDB[x].email + " " + inhoudDB[x].telefoonNummer + " " + inhoudDB[x].geboorteDatum + " "  + inhoudDB[x].opdrachtgever + " " + inhoudDB[x].contactpersoon +  "</li>";
+                    }
+                    string1 += "</ul>";
+                    document.getElementById("printMedewerkers").innerHTML = string1;
+                }
+                xhr.open("GET","http://localhost:8082/api/medewerkers/", true);
+                xhr.send();
+            }
+
+
+            function loadObject() {
+                var UIP = document.getElementById('userInput2').value;
+                var url = "http://localhost:8082/api/contactpersonen/";
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function(){
+                    var inhoudDB = JSON.parse(this.responseText);
+                    var string1 = "<ul><li>"+ inhoudDB.id + " " + inhoudDB.voornaam + " " + inhoudDB.achternaam + " " + inhoudDB.adres + " " + inhoudDB.email + " " + inhoudDB.telefoonNummer + " " + inhoudDB.geboorteDatum + "</li></ul>";
+                    document.getElementById("printObject").innerHTML = string1;
+                }
+                xhr.open("GET", url+UIP, true);
+                xhr.send();
+            }
+
+            function laadOpdrachtgever() {
+                var UIP = document.getElementById('userInputBekijkOpdrachtgever').value;
+                var url = "http://localhost:8082/api/opdrachtgevers/";
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function(){
+                    var inhoudDB = JSON.parse(this.responseText);
+                    var string1 = "<ul><li>"+ inhoudDB.id + " " + inhoudDB.bedrijfsnaam + " " + inhoudDB.adres + " " + inhoudDB.email + " " + inhoudDB.telefoonnummer + "</li></ul>";
+                    document.getElementById("printOG").innerHTML = string1;
+                }
+                xhr.open("GET", url+UIP, true);
+                xhr.send();
+            }
+
+            function laadMedewerker() {
+                var UIP = document.getElementById('userInputBekijkMedewerker').value;
+                var url = "http://localhost:8082/api/medewerkers/";
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function(){
+                    var inhoudDB = JSON.parse(this.responseText);
+                    var string1 = "<ul><li>"+ inhoudDB.id + " " + inhoudDB.voornaam + " " + inhoudDB.achternaam + " " + inhoudDB.adres + " " + inhoudDB.email + " " + inhoudDB.telefoonNummer + " " + inhoudDB.geboorteDatum + " " + inhoudDB.opdrachtgever + " " + inhoudDB.contactpersoon + "</li></ul>";
+                    document.getElementById("printMW").innerHTML = string1;
+                }
+                xhr.open("GET", url+UIP, true);
+                xhr.send();
+            }
+
+            function addContactpersoonToDB(){
+                var url = "http://localhost:8082/api/contactpersonen/";
+                var persoon = {
+                    voornaam : document.getElementById('voornaam').value,
+                    achternaam : document.getElementById('achternaam').value,
+                    email : document.getElementById('email').value,
+                    adres : document.getElementById('adres').value,
+                    geboorteDatum : document.getElementById('geboorteDatum').value,
+                    telefoonNummer : document.getElementById('telefoonNummer').value,
+                 // wachtwoordHash : 
+                };
+                var json = JSON.stringify(persoon);
+                var xhr = new XMLHttpRequest();                     // AJAX
+                xhr.onreadystatechange = function() {               // readystate (0 t/m 4), methode gebeurt 4x
+                    loadObjects();
+                    laadOpdrachtgevers();
+                    laadMedewerkers();
+                }
+                xhr.open("POST",url, true);    // asynchroon betekent tegelijkertijd. Synchroon is afgestemd
+                xhr.setRequestHeader("Content-type","application/json");
+                xhr.send(json);
+            }
+
+            function addOpdrachtgeverToDB(){
+                var url = "http://localhost:8082/api/opdrachtgevers/";
+                var opdrachtgever = {
+                    bedrijfsnaam : document.getElementById('bedrijfsnaam').value,
+                    adres : document.getElementById('adresOG').value,
+                    email : document.getElementById('emailOG').value,
+                    telefoonnummer : document.getElementById('telefoonnummerOG').value,
+                 // wachtwoordHash : 
+                };
+                var json = JSON.stringify(opdrachtgever);
+                var xhr = new XMLHttpRequest();                     // AJAX
+                xhr.onreadystatechange = function() {               // readystate (0 t/m 4), methode gebeurt 4x
+                    loadObjects();
+                    laadOpdrachtgevers();
+                }
+                xhr.open("POST",url, true);    // asynchroon betekent tegelijkertijd. Synchroon is afgestemd
+                xhr.setRequestHeader("Content-type","application/json");
+                xhr.send(json);
+            }
+
+            function addMedewerkerToDB() {
+                var url = "http://localhost:8082/api/medewerkers/";
+                var persoon = {
+                    voornaam : document.getElementById('voornaamMedewerker').value,
+                    achternaam : document.getElementById('achternaamMedewerker').value,
+                    email : document.getElementById('emailMedewerker').value,
+                    adres : document.getElementById('adresMedewerker').value,
+                    geboorteDatum : document.getElementById('geboorteDatumMedewerker').value,
+                    telefoonNummer : document.getElementById('telefoonNummerMedewerker').value,
+                 // wachtwoordHash : 
+                };
+                var json = JSON.stringify(persoon);
+                var xhr = new XMLHttpRequest();                     // AJAX
+                xhr.onreadystatechange = function() {               // readystate (0 t/m 4), methode gebeurt 4x
+                    loadObjects();
+                    laadOpdrachtgevers();
+                    laadMedewerkers();
+                }
+                xhr.open("POST",url, true);    // asynchroon betekent tegelijkertijd. Synchroon is afgestemd
+                xhr.setRequestHeader("Content-type","application/json");
+                xhr.send(json);
+            }
+
+            function verwijder() {
+                var UIP = document.getElementById('userInput').value;
+                var url = "http://localhost:8082/api/contactpersonen/";
+                var xhr = new XMLHttpRequest();
+
+                xhr.open("DELETE", url+UIP, true);
+                xhr.onload = function () {
+                    var jojo = JSON.parse(xhr.responseText);
+                    if (xhr.readyState == 4 && xhr.status == "200") {
+                        console.table(jojo);
+                    } else {
+                     console.error(jojo);
+                    }
+                }
+                xhr.onreadystatechange = function() {
+                    loadObjects();
+                    laadOpdrachtgevers();
+                }
+                xhr.send();
+            }
+
+            function verwijderOpdrachtgever() {
+                var UIP = document.getElementById('userInputDeleteOpdrachtgever').value;
+                var url = "http://localhost:8082/api/opdrachtgevers/";
+                var xhr = new XMLHttpRequest();
+
+                xhr.open("DELETE", url+UIP, true);
+                xhr.onload = function () {
+                    var jojo = JSON.parse(xhr.responseText);
+                    if (xhr.readyState == 4 && xhr.status == "200") {
+                        console.table(jojo);
+                    } else {
+                     console.error(jojo);
+                    }
+                }
+                xhr.onreadystatechange = function() {
+                    loadObjects();
+                    laadOpdrachtgevers();
+                }
+                xhr.send();
+            }
+
+            function verwijderMedewerker() {
+                var UIP = document.getElementById('userInputDeleteMedewerker').value;
+                var url = "http://localhost:8082/api/medewerkers/";
+                var xhr = new XMLHttpRequest();
+
+                xhr.open("DELETE", url+UIP, true);
+                xhr.onload = function () {
+                    var jojo = JSON.parse(xhr.responseText);
+                    if (xhr.readyState == 4 && xhr.status == "200") {
+                        console.table(jojo);
+                    } else {
+                     console.error(jojo);
+                    }
+                }
+                xhr.onreadystatechange = function() {
+                    loadObjects();
+                    laadOpdrachtgevers();
+                    laadMedewerkers();
+                }
+                xhr.send();
+            }
+
+            function changeObject() {
+                var url = "http://localhost:8082/api/contactpersonen/";
+                var input = document.getElementById('userInput3').value;
+                var persoon = {
+                    voornaam : document.getElementById('voornaam2').value,
+                    achternaam : document.getElementById('achternaam2').value,
+                    email : document.getElementById('email2').value,
+                    adres : document.getElementById('adres2').value,
+                    geboorteDatum : document.getElementById('geboorteDatum2').value,
+                    telefoonNummer : document.getElementById('telefoonNummer2').value,
+                 // wachtwoordHash : 
+                };
+                var json = JSON.stringify(persoon);
+
+                var xhr = new XMLHttpRequest();
+                xhr.open("PUT", url+input, true);
+                xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
+                xhr.onload = function () {
+                    var users = JSON.parse(xhr.responseText);
+                    if (xhr.readyState == 4 && xhr.status == "200") {
+                        console.table(users);
+                    } else {
+                        console.error(users);
+                    }
+                }
+                xhr.onreadystatechange = function() {
+                    loadObjects();
+                    laadOpdrachtgevers();
+                }
+                xhr.send(json);
+            }
+
+            function changeOpdrachtgever() {
+                var url = "http://localhost:8082/api/opdrachtgevers/";
+                var input = document.getElementById('userInput4').value;
+                var opdrachtgever = {
+                    bedrijfsnaam : document.getElementById('bedrijfsnaam2').value,
+                    adres : document.getElementById('adresOG2').value,
+                    email : document.getElementById('emailOG2').value,
+                    telefoonnummer : document.getElementById('telefoonnummerOG2').value
+                };
+                var json = JSON.stringify(opdrachtgever);
+
+                var xhr = new XMLHttpRequest();
+                xhr.open("PUT", url+input, true);
+                xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
+                xhr.onload = function () {
+                    var users = JSON.parse(xhr.responseText);
+                    if (xhr.readyState == 4 && xhr.status == "200") {
+                        console.table(users);
+                    } else {
+                        console.error(users);
+                    }
+                }
+                xhr.onreadystatechange = function() {
+                    loadObjects();
+                    laadOpdrachtgevers();
+                }
+                xhr.send(json);
+            }
+
+            function changeMedewerker() {
+                var url = "http://localhost:8082/api/medewerkers/";
+                var input = document.getElementById('userInputMedewerkerWijzigen').value;
+                var persoon = {
+                    voornaam : document.getElementById('voornaamMedewerker2').value,
+                    achternaam : document.getElementById('achternaamMedewerker2').value,
+                    email : document.getElementById('emailMedewerker2').value,
+                    adres : document.getElementById('adresMedewerker2').value,
+                    geboorteDatum : document.getElementById('geboorteDatumMedewerker2').value,
+                    telefoonNummer : document.getElementById('telefoonNummerMedewerker2').value,
+                 // wachtwoordHash : 
+                };
+                var json = JSON.stringify(persoon);
+
+                var xhr = new XMLHttpRequest();
+                xhr.open("PUT", url+input, true);
+                xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
+                xhr.onload = function () {
+                    var users = JSON.parse(xhr.responseText);
+                    if (xhr.readyState == 4 && xhr.status == "200") {
+                        console.table(users);
+                    } else {
+                        console.error(users);
+                    }
+                }
+                xhr.onreadystatechange = function() {
+                    loadObjects();
+                    laadOpdrachtgevers();
+                    laadMedewerkers();
+                }
+                xhr.send(json);
+            }
+
+            window.onload = function() {
+                loadObjects();
+                laadOpdrachtgevers();
+                laadMedewerkers();
+            }
+
+        </script>
+    </body>
+</html>

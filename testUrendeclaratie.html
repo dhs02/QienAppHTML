@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            * {
+	            margin: 0;
+	            padding: 0;
+	            box-sizing: border-box;
+            }
+            body {
+	            padding-top: 0px;
+	            font-family: "Titillium Web", sans-serif;
+	            background-color: #ececec;
+                font-size: 14px;
+            }
+            .container {
+	            margin: 0 auto;
+	            padding: 20px;
+                border: 1px solid black;
+            }
+            .col1, .col2, .col3 {
+                display: inline-block;
+                vertical-align: top;
+                width: 30%;
+            }
+
+            input {
+                width: 10%;
+            }
+
+            label {
+                 display: inline-block;
+                 width: 35%;
+            }
+            ul {
+                list-style-type: none;
+            }
+            h2 {
+                font-size: 16px;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div class="wrapper">
+
+            <div class="container">
+                <div class = "col1">
+                    <h2>Urendeclaraties in database (GET & PUT)</h2>
+                    <br><div id="printInhoud"></div>
+                    <br><div id="printInhoud2"></div>
+            </div>
+
+            <div class="container">
+                <div class = col1>
+                    <h2>Urendeclaratie aanmaken (GET)</h2>
+                    <br><form>
+
+                        <br><label for="maandnaam">Maandnaam:</label>
+                        <input type="text" id="maandnaam">
+                    
+                        <br><label for="maandnummer">Maandnummer:</label>
+                        <input type="text" id="maandnummer">
+
+                        <br><input type="button" id = "addUD" value="Maak urendeclaratie aan"  onclick="addUDToDB()">
+
+                    </form>
+                </div>
+            </div>
+
+            <div class="container">
+                <div class = "col1">
+                    <h2>Urendeclaratie bekijken (GET)</h2>
+                    <br><input type="text" id="userInput2">
+                    <button id="checkGebruiker" onclick="loadObject()">Bekijk urendeclaratie met deze ID</button>
+                    <div id="printObject"></div>
+                </div>
+            </div>
+
+            <div class="container">
+                <div class = col1>
+                    <h2>GewerkteDag wijzigen (PUT)</h2>
+                    <br><form>
+                        <br><label for="aantalUrenOpdracht">aantalUrenOpdracht:</label>
+                        <input type="number" step="0.25" id="aantalUrenOpdracht">
+                    
+                        <br><label for="aantalUrenOverwerk">aantalUrenOverwerk:</label>
+                        <input type="number" step="0.25" id="aantalUrenOverwerk">
+
+                        <br><label for="aantalUrenVerlof">aantalUrenVerlof:</label>
+                        <input type="number" step="0.25" id="aantalUrenVerlof">
+
+                        <br><label for="aantalUrenZiek">aantalUrenZiek:</label>
+                        <input type="number" step="0.25" id="aantalUrenZiek">
+
+                        <br><label for="aantalUrenTraining">aantalUrenTraining:</label>
+                        <input type="number" step="0.25" id="aantalUrenTraining">
+
+                        <br><label for="aantalUrenOverig">aantalUrenOverig:</label>
+                        <input type="number" step="0.25" id="aantalUrenOverig">
+                        
+                        <br><input type="text" id="userInput3">
+                        <button id="veranderGewerkteDag" onclick="changeObject()">Verander GewerkteDag met deze ID</button>
+                    </form>
+                </div>
+                
+            </div>
+            <div class="container">
+                <div class = "col1">
+                    <h2>Contactpersoon aan medewerker toevoegen</h2>
+                    <br><label for="MedewerkerID">ID van medewerker</label>
+                    <input type="text" id="MedewerkerID">
+                
+                    <br><label for="ContactpersoonID">ID van contactpersoon</label>
+                    <input type="text" id="ContactpersoonID">
+
+                    <button id="voegContactpersoonToe" onclick="addCPToMW()">Voeg contactpersoon toe aan medewerker</button>
+                </div>
+                <div class = "col2">
+                    <h2>Opdrachtgever aan medewerker toevoegen</h2>
+                    <br><label for="MedewerkerID2">ID van medewerker</label>
+                    <input type="text" id="MedewerkerID2">
+                
+                    <br><label for="OpdrachtgeverID">ID van opdrachtgever</label>
+                    <input type="text" id="OpdrachtgeverID">
+
+                    <button id="voegOpdrachtgeverToe" onclick="addOGToMW()">Voeg opdrachtgever toe aan medewerker</button>
+                </div>
+                <div class = "col3">
+                </div>
+            </div>
+            <div class="container">
+                <div class = "col1">
+                </div>
+                <div class = "col2">
+                    <h2>Opdrachtgever aan contactpersoon toevoegen</h2>
+                    <br><label for="ContactpersoonID2">ID van contactpersoon</label>
+                    <input type="text" id="ContactpersoonID2">
+                
+                    <br><label for="OpdrachtgeverID2">ID van opdrachtgever</label>
+                    <input type="text" id="OpdrachtgeverID2">
+
+                    <button id="voegOpdrachtgeverToe2" onclick="addCPToOG()">Voeg opdrachtgever toe aan contactpersoon</button>
+                </div>
+                <div class = "col3">
+                </div>
+            </div>
+
+
+        </div>
+    
+        <script>
+
+            function loadObjects() {
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function(){
+                    var inhoudDB = JSON.parse(this.responseText);
+                    var string1 = "<ul>";
+                    var string2 = "<ul>";
+                    for (x=0; x < inhoudDB.length; x++) {
+                        string1 += "<li>"+ inhoudDB[x].id + " " + inhoudDB[x].maandNaam +  " " + inhoudDB[x].notitie + "</li>";
+                        for (y = 0; y < inhoudDB[x].gewerkteDagen.length; y++) {
+                            string2 += //`<li>${inhoudDB[x].gewerkteDagen[y].id} 
+                                `<li>${inhoudDB[x].gewerkteDagen[y].dagnr} 
+                                <input type="number" id="aantalUrenOpdracht${inhoudDB[x].gewerkteDagen[y].id}" name="aantalUrenOpdracht${inhoudDB[x].gewerkteDagen[y].id}" value="${inhoudDB[x].gewerkteDagen[y].aantalUrenOpdracht}" onchange="changeObject(${inhoudDB[x].gewerkteDagen[y].id})">  
+                                <input type="number" id="aantalUrenOverwerk${inhoudDB[x].gewerkteDagen[y].id}" name="aantalUrenOverwerk${inhoudDB[x].gewerkteDagen[y].id}" value="${inhoudDB[x].gewerkteDagen[y].aantalUrenOverwerk}" onchange="changeObject(${inhoudDB[x].gewerkteDagen[y].id})"> 
+                                <input type="number" id="aantalUrenVerlof${inhoudDB[x].gewerkteDagen[y].id}" name="aantalUrenVerlof${inhoudDB[x].gewerkteDagen[y].id}" value="${inhoudDB[x].gewerkteDagen[y].aantalUrenVerlof}" onchange="changeObject(${inhoudDB[x].gewerkteDagen[y].id})"> 
+                                <input type="number" id="aantalUrenZiek${inhoudDB[x].gewerkteDagen[y].id}" name="aantalUrenZiek${inhoudDB[x].gewerkteDagen[y].id}" value="${inhoudDB[x].gewerkteDagen[y].aantalUrenZiek}" onchange="changeObject(${inhoudDB[x].gewerkteDagen[y].id})"> 
+                                <input type="number" id="aantalUrenTraining${inhoudDB[x].gewerkteDagen[y].id}" name="aantalUrenTraining${inhoudDB[x].gewerkteDagen[y].id}" value="${inhoudDB[x].gewerkteDagen[y].aantalUrenTraining}" onchange="changeObject(${inhoudDB[x].gewerkteDagen[y].id})"> 
+                                <input type="number" id="aantalUrenOverig${inhoudDB[x].gewerkteDagen[y].id}" name="aantalUrenOverig${inhoudDB[x].gewerkteDagen[y].id}" value="${inhoudDB[x].gewerkteDagen[y].aantalUrenOverig}" onchange="changeObject(${inhoudDB[x].gewerkteDagen[y].id})"> 
+                            </li>`;
+                        }
+                    }
+                    string1 += "</ul>";
+                    string2 += "</ul>";
+                    document.getElementById("printInhoud").innerHTML = string1;
+                    document.getElementById("printInhoud2").innerHTML = string2;
+                }
+                xhr.open("GET","http://localhost:8082/api/urendeclaraties/", true);
+                xhr.send();
+            }
+
+            function changeObject(id) {
+                var url = "http://localhost:8082/api/urendeclaraties/gewerktedag/";
+                var gewerkteDag = {
+                    aantalUrenOpdracht : document.getElementById(`aantalUrenOpdracht${id}`).value,
+                    aantalUrenOverwerk : document.getElementById(`aantalUrenOverwerk${id}`).value,
+                    aantalUrenVerlof : document.getElementById(`aantalUrenVerlof${id}`).value,
+                    aantalUrenZiek : document.getElementById(`aantalUrenZiek${id}`).value,
+                    aantalUrenTraining : document.getElementById(`aantalUrenTraining${id}`).value,
+                    aantalUrenOverig : document.getElementById(`aantalUrenOverig${id}`).value,
+                };
+                var json = JSON.stringify(gewerkteDag);
+
+                var xhr = new XMLHttpRequest();
+                xhr.open("PUT", url+id, true);
+                xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
+                // xhr.onload = function () {}
+                xhr.onreadystatechange = function() {
+                    loadObjects();
+                }
+                xhr.send(json);
+            }
+
+            function loadObject() {
+                var UIP = document.getElementById('userInput2').value;
+                var url = "http://localhost:8082/api/urendeclaraties/";
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function(){
+                    var inhoudDB = JSON.parse(this.responseText);
+                    var string1 = "<ul><li>"+ inhoudDB.id + " " + inhoudDB.maandNaam +  " " + inhoudDB.notitie + "</li></ul>";
+                    document.getElementById("printObject").innerHTML = string1;
+                }
+                xhr.open("GET", url+UIP, true);
+                xhr.send();
+            }
+
+            // function loadObjectByMonth() {
+            //     var UIP = document.getElementById('userInput2').value;
+            //     var url = "http://localhost:8082/api/urendeclaraties//byMaandNaam/";
+            //     var xhr = new XMLHttpRequest();
+            //     xhr.onreadystatechange = function(){
+            //         var inhoudDB = JSON.parse(this.responseText);
+            //         var string1 = "<ul><li>"+ inhoudDB.id + " " + inhoudDB.maandNaam +  " " + inhoudDB.notitie + "</li></ul>";
+            //         document.getElementById("printObject").innerHTML = string1;
+            //     }
+            //     xhr.open("GET", url+UIP, true);
+            //     xhr.send();
+            // }
+
+            function addUDToDB(){
+                var input1 = document.getElementById('maandnaam').value;
+                var input2 = document.getElementById('maandnummer').value;
+                var url = "http://localhost:8082/api/urendeclaraties/maakurendeclaratie/" + input1 + "/" + input2;
+                var xhr = new XMLHttpRequest();                     // AJAX
+                xhr.onreadystatechange = function() {               // readystate (0 t/m 4), methode gebeurt 4x
+                    loadObjects();
+                }
+                xhr.open("GET", url, true);    // asynchroon betekent tegelijkertijd. Synchroon is afgestemd
+                xhr.send();
+            }
+
+            function addOpdrachtgeverToDB(){
+                var url = "http://localhost:8082/api/opdrachtgevers/";
+                var opdrachtgever = {
+                    bedrijfsnaam : document.getElementById('bedrijfsnaam').value,
+                    adres : document.getElementById('adresOG').value,
+                    email : document.getElementById('emailOG').value,
+                    telefoonnummer : document.getElementById('telefoonnummerOG').value,
+                 // wachtwoordHash : 
+                };
+                var json = JSON.stringify(opdrachtgever);
+                var xhr = new XMLHttpRequest();                     // AJAX
+                xhr.onreadystatechange = function() {               // readystate (0 t/m 4), methode gebeurt 4x
+                    loadObjects();
+                    laadOpdrachtgevers();
+                }
+                xhr.open("POST",url, true);    // asynchroon betekent tegelijkertijd. Synchroon is afgestemd
+                xhr.setRequestHeader("Content-type","application/json");
+                xhr.send(json);
+            }
+
+            function addMedewerkerToDB() {
+                var url = "http://localhost:8082/api/medewerkers/";
+                var persoon = {
+                    voornaam : document.getElementById('voornaamMedewerker').value,
+                    achternaam : document.getElementById('achternaamMedewerker').value,
+                    email : document.getElementById('emailMedewerker').value,
+                    adres : document.getElementById('adresMedewerker').value,
+                    geboorteDatum : document.getElementById('geboorteDatumMedewerker').value,
+                    telefoonNummer : document.getElementById('telefoonNummerMedewerker').value,
+                 // wachtwoordHash : 
+                };
+                var json = JSON.stringify(persoon);
+                var xhr = new XMLHttpRequest();                     // AJAX
+                xhr.onreadystatechange = function() {               // readystate (0 t/m 4), methode gebeurt 4x
+                    loadObjects();
+                    laadOpdrachtgevers();
+                    laadMedewerkers();
+                }
+                xhr.open("POST",url, true);    // asynchroon betekent tegelijkertijd. Synchroon is afgestemd
+                xhr.setRequestHeader("Content-type","application/json");
+                xhr.send(json);
+            }
+
+            function verwijder() {
+                var UIP = document.getElementById('userInput').value;
+                var url = "http://localhost:8082/api/contactpersonen/";
+                var xhr = new XMLHttpRequest();
+
+                xhr.open("DELETE", url+UIP, true);
+                xhr.onload = function () {
+                    var jojo = JSON.parse(xhr.responseText);
+                    if (xhr.readyState == 4 && xhr.status == "200") {
+                        console.table(jojo);
+                    } else {
+                     console.error(jojo);
+                    }
+                }
+                xhr.onreadystatechange = function() {
+                    loadObjects();
+                    laadOpdrachtgevers();
+                }
+                xhr.send();
+            }
+
+
+
+          
+
+            window.onload = function() {
+                loadObjects();
+                laadOpdrachtgevers();
+                laadMedewerkers();
+            }
+
+        </script>
+    </body>
+</html>

@@ -58,7 +58,7 @@
 
             <div class="container">
                 <div class = col1>
-                    <h2>Urendeclaratie aanmaken (GET)</h2>
+                    <h2>Urendeclaratie maken en koppelen aan alle medewerkers (GET)</h2>
                     <br><form>
 
                         <br><label for="maandnaam">Maandnaam:</label>
@@ -67,7 +67,7 @@
                         <br><label for="maandnummer">Maandnummer:</label>
                         <input type="text" id="maandnummer">
 
-                        <br><input type="button" id = "addUD" value="Maak urendeclaratie aan"  onclick="addUDToDB()">
+                        <br><input type="button" id = "addUD" value="Maak urendeclaratie aan"  onclick="addUrendeclaratieToAllMedewerkers()">
 
                     </form>
                 </div>
@@ -112,24 +112,8 @@
             </div>
             <div class="container">
                 <div class = "col1">
-                    <h2>Contactpersoon aan medewerker toevoegen</h2>
-                    <br><label for="MedewerkerID">ID van medewerker</label>
-                    <input type="text" id="MedewerkerID">
-                
-                    <br><label for="ContactpersoonID">ID van contactpersoon</label>
-                    <input type="text" id="ContactpersoonID">
-
-                    <button id="voegContactpersoonToe" onclick="addCPToMW()">Voeg contactpersoon toe aan medewerker</button>
                 </div>
                 <div class = "col2">
-                    <h2>Opdrachtgever aan medewerker toevoegen</h2>
-                    <br><label for="MedewerkerID2">ID van medewerker</label>
-                    <input type="text" id="MedewerkerID2">
-                
-                    <br><label for="OpdrachtgeverID">ID van opdrachtgever</label>
-                    <input type="text" id="OpdrachtgeverID">
-
-                    <button id="voegOpdrachtgeverToe" onclick="addOGToMW()">Voeg opdrachtgever toe aan medewerker</button>
                 </div>
                 <div class = "col3">
                 </div>
@@ -138,14 +122,6 @@
                 <div class = "col1">
                 </div>
                 <div class = "col2">
-                    <h2>Opdrachtgever aan contactpersoon toevoegen</h2>
-                    <br><label for="ContactpersoonID2">ID van contactpersoon</label>
-                    <input type="text" id="ContactpersoonID2">
-                
-                    <br><label for="OpdrachtgeverID2">ID van opdrachtgever</label>
-                    <input type="text" id="OpdrachtgeverID2">
-
-                    <button id="voegOpdrachtgeverToe2" onclick="addCPToOG()">Voeg opdrachtgever toe aan contactpersoon</button>
                 </div>
                 <div class = "col3">
                 </div>
@@ -156,7 +132,7 @@
     
         <script>
 
-            function loadObjects() {
+            function loadObjects(inputNumber) {
                 var xhr = new XMLHttpRequest();
                 xhr.onreadystatechange = function(){
                     var inhoudDB = JSON.parse(this.responseText);
@@ -181,7 +157,7 @@
                     document.getElementById("printInhoud").innerHTML = string1;
                     document.getElementById("printInhoud2").innerHTML = string2;
                 }
-                xhr.open("GET","http://localhost:8082/api/urendeclaraties/", true);
+                xhr.open("GET","http://localhost:8082/api/urendeclaraties/metmedewerkerid/107", true);
                 xhr.send();
             }
 
@@ -248,15 +224,15 @@
             //     xhr.send();
             // }
 
-            function addUDToDB(){
+            function addUrendeclaratieToAllMedewerkers(){
                 var input1 = document.getElementById('maandnaam').value;
                 var input2 = document.getElementById('maandnummer').value;
-                var url = "http://localhost:8082/api/urendeclaraties/maakurendeclaratie/" + input1 + "/" + input2;
+                var url = "http://localhost:8082/api/urendeclaraties/maakenkoppelaanallen/" + input1 + "/" + input2;
                 var xhr = new XMLHttpRequest();                     // AJAX
                 xhr.onreadystatechange = function() {               // readystate (0 t/m 4), methode gebeurt 4x
                     loadObjects();
                 }
-                xhr.open("GET", url, true);    // asynchroon betekent tegelijkertijd. Synchroon is afgestemd
+                xhr.open("POST", url, true);    // asynchroon betekent tegelijkertijd. Synchroon is afgestemd
                 xhr.send();
             }
 
